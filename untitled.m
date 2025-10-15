@@ -1,14 +1,27 @@
-% Antag att z är ditt iddata-objekt med 4000 sampel
-N = size(z.OutputData, 1);  % Hämtar antalet sampel
+clc;
+load data_dist.mat
+plot(data_distde,data_distdv);
 
-% Dela upp iddata-objektet i två delar
-z_estimation = z(30:2000);     % Första 2000 sampel för estimering
-z_validation = z(2001:4001);   % Sista 2000 sampel för validering
+%{
+marx = arx(data_distde,[5 7 1]);
+mss = n4sid(ze,3,’N4W’,’CVA’,’N4H’,[15 39 39]);
+moe = oe(ze,[5 5 1]);
+figure; compare(data_distdv,marx,mss,moe);
+%}
 
-% Perform Spectral Power Analysis
-P = spa(z);  % P is an IDFRD model containing frequency response data
+%advice(data_distdv, 'nonlinear');
 
-g=etfe(z)
-bode(g)
 
+ny = 2;       
+nu = 1;       
+nx = 4;       
+
+x0 = [2.5; 7.5; 0; 0];
+theta0 = [0.025  0.045  65  75  55  4.5  4.5  2.5  2.5  2.5  10];
+
+clear m0
+m0 = idnlgrey('two_cart_model', [ny nu nx], theta0, x0);
+
+disp(m0)
+validate_model(m0)
 
